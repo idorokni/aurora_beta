@@ -1,0 +1,60 @@
+﻿<Application x:Class="Aurora.Client.WpfApplication.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Aurora.Client.WpfApplication"
+             xmlns:view="clr-namespace:Aurora.Client.WpfApplication.MVVM.View"
+             xmlns:viewModel="clr-namespace:Aurora.Client.WpfApplication.MVVM.ViewModel"
+             xmlns:xf="clr-namespace:XamlFlair;assembly=XamlFlair.WPF"
+             xmlns:conv="clr-namespace:Aurora.Client.WpfApplication.MVVM.ViewModel"
+             xmlns:svg="c" 
+             xmlns:local1="clr-namespace:Aurora.Client.WpfApplication.MVVM.Converter"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <xf:AnimationSettings x:Key="FadeInAndSlideFromLeft"
+                          Kind="FadeFrom,TranslateXFrom"
+                          Opacity="0"
+                          Duration="600"/>
+            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+                <view:HomeView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:LoginViewModel}">
+                <view:LoginView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:SignupViewModel}">
+                <view:SignupView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:EditProfileViewModel}">
+                <view:EditProfileView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:CreateNewPostViewModel}">
+                <view:CreateNewPostView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:SearchResultViewModel}">
+                <view:SearchResultView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:UserProfileViewModel}">
+                <view:UserProfileView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:PostViewModel}">
+                <view:PostView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:DefaultInsideHomeViewModel}">
+                <view:DefaultInsideHomeView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:UserChatsViewModel}">
+                <view:UserChatsView/>
+            </DataTemplate> 
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Theme/SubmitButtonTheme.xaml"/>
+                <ResourceDictionary Source="Theme/LoginSignUpInputBoxTheme.xaml"/>
+                <ResourceDictionary Source="Theme/LoginTitleText.xaml"/>
+                <ResourceDictionary Source="Theme/HomeOptionButton.xaml"/>
+                <ResourceDictionary Source="Theme/MainOptionButton.xaml"/>
+                <ResourceDictionary Source="Theme/LowCorenerRadiusButton.xaml"/>
+                <ResourceDictionary Source="Theme/CircleButtonTheme.xaml"/>
+                <xf:XamlFlairResources/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

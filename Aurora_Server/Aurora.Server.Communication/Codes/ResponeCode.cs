@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Aurora.Server.Communication.Codes
+{
+    public enum ResponseCode : byte
+    {
+        PORT_SEND_SUCCESS = 70,
+        PORT_SEND_FAILED = 71,
+        TOKEN_SIGNUP_SUCCESS = 100,
+        TOKEN_SIGNUP_FAILED = 101,
+        TOKEN_LOGIN_SUCCESS = 200,
+        TOKEN_LOGIN_FAILED = 201,
+        TOKEN_CONNECT_FAILED = 202,
+        TOKEN_CONNECT_SUCCESS = 203,
+        ADD_POST_SUCCESS = 204,
+        ADD_POST_FAILED = 205,
+        GET_USER_DATA_SUCCESS = 206,
+        GET_USER_DATA_FAILED = 207,
+        UPDATE_USER_DATE_SUCCESS = 208,
+        UPDATE_USER_DATE_FAILED = 209,
+        SEARCH_USER_SUCCESS = 210,
+        SEARCH_USER_FAILED = 211,
+        GET_POST_SUCCESS = 212,
+        GET_POST_FAILED = 213,
+        GET_AMOUNT_OF_POSTS_SUCCESS = 214,
+        GET_AMOUNT_OF_POSTS_FAILED = 215,
+        GET_POST_DATA_SUCCESS = 216,
+        GET_POST_DATA_FAILED = 217,
+        COMMENT_SUCCESS = 218,
+        COMMENT_FAILED = 219,
+        LIKE_POST_SUCCESS = 220,
+        LIKE_POST_FAILED = 221,
+        REFRESH_SUCCESS = 222,
+        REFRESH_FAILED = 223,
+        FOLLOW_USER_SUCCESS = 224,
+        FOLLOW_USER_FAILED = 225,
+        UNFOLLOW_USER_SUCCESS = 226,
+        UNFOLLOW_USER_FAILED = 227,
+        GET_RECENT_POSTS_SUCCESS = 228,
+        GET_RECENT_POSTS_FAILED = 229,
+        GET_FOLLOWING_POSTS_SUCCESS = 230,
+        GET_FOLLOWING_POSTS_FAILED = 231,
+        GET_ONLINE_USERS_SUCCESS = 232,
+        GET_ONLINE_USERS_FAILED = 233,
+        SEND_MESSAGE_SUCCESS = 234,
+        SEND_MESSAGE_FAILED = 235,
+        SEND_AES_SETUP_SUCCESS = 236,
+        SEND_AES_SETUP_FAILED = 237,
+        GET_SERVER_RSA_PUBLIC_KEY_REQUEST_CODE_SUCCESS = 238,
+        GET_SERVER_RSA_PUBLIC_KEY_FAILED = 239,
+
+    }
+}

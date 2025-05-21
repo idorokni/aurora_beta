@@ -1,0 +1,207 @@
+﻿<UserControl x:Class="Aurora.Client.WpfApplication.MVVM.View.UserChatsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Client.WpfApplication.MVVM.View" xmlns:viewmodel="clr-namespace:Aurora.Client.WpfApplication.MVVM.ViewModel" xmlns:userControl="clr-namespace:Aurora.Client.WpfApplication.UserControls" d:DataContext="{d:DesignInstance Type=viewmodel:UserChatsViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="2.4*"/>
+        </Grid.ColumnDefinitions>
+        <Border Background="White"
+                CornerRadius="0 0 0 15"
+                BorderBrush="#E5E7EB"
+                BorderThickness="0 0 0.7 0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                <ItemsControl ItemsSource="{Binding Users}"
+Background="Transparent">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <userControl:UserChatItem DataContext="{Binding}" Margin="5" Width="150" SelectUserCommand="{Binding DataContext.SwapUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5.5*"/>
+            </Grid.RowDefinitions>
+
+            <Border CornerRadius="0 0 0 0"
+                Background="White"
+                BorderThickness="0 0 0 0.7"
+                BorderBrush="#E5E7EB">
+                <Grid>
+                    <TextBlock Text="Chats"
+                        Margin="20 0 0 0"
+                        FontSize="25"
+                        FontWeight="DemiBold"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+                </Grid>
+            </Border>
+            <Border Grid.Column="1"
+                Background="White"
+                BorderBrush="#E5E7EB"
+                BorderThickness="0 0 0 0.7"
+                CornerRadius="0 0 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Width="60" 
+                    Height="60"
+                    CornerRadius="50"
+                    SnapsToDevicePixels="True"
+                    RenderOptions.BitmapScalingMode="Fant"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding ProfilePicture}" 
+                                Stretch="UniformToFill"/>
+                        </Border.Background>
+                    </Border>
+
+                    <TextBlock Text="{Binding Username}"
+                           Grid.Column="1"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Margin="0 0 0 0"
+                           FontSize="25"
+                           FontWeight="DemiBold"/>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1"
+                Grid.Column="1"
+                Background="White"
+                BorderBrush="#E5E7EB"
+                BorderThickness="0 0 0 0"
+                CornerRadius="0 0 15 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="65"/>
+                    </Grid.RowDefinitions>
+
+                    <Border BorderBrush="#E5E7EB" BorderThickness="0 0 0 0.7">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                            <ItemsControl ItemsSource="{Binding CurrentChat}" Background="Transparent">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <!-- Use StackPanel for vertical stacking -->
+                                        <StackPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemContainerStyle>
+                                    <Style TargetType="ContentPresenter">
+                                        <!-- Default alignment (IsSender = false) -->
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        <Style.Triggers>
+                                            <!-- When IsSender is true, align left -->
+                                            <DataTrigger Binding="{Binding IsSender}" Value="True">
+                                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <userControl:MessageItem DataContext="{Binding}" Width="250" Margin="5"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border BorderThickness="0.7" BorderBrush="#E5E7EB" Margin="10 13 10 13" CornerRadius="5" Grid.Row="1">
+                            <Grid>
+                                <TextBlock x:Name="textMessage" MouseDown="textMessage_MouseDown" Text="Type a message..." Style="{StaticResource txtHint}" VerticalAlignment="Center"/>
+                                <TextBox x:Name="txtMessage" BorderThickness="0" LostFocus="txtMessage_LostFocus" Text="{Binding MessageText}"/>
+                            </Grid>
+                        </Border>
+
+                        <Button Grid.Column="1"
+        Margin="0 13 10 13"
+        OverridesDefaultStyle="True"                   
+                        Background="Transparent"
+                        BorderThickness="0"
+                        BorderBrush="Transparent"
+                        Padding="0"
+                        FocusVisualStyle="{x:Null}"
+                        RenderTransformOrigin="0.5,0.5"
+                            Command="{Binding SendMessageCommand}">
+
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+            Storyboard.TargetName="PlaneTransform"
+            Storyboard.TargetProperty="X"
+            To="500"
+            Duration="0:0:1"
+            AutoReverse="True" />
+                                            <DoubleAnimation
+            Storyboard.TargetName="PlaneTransform"
+            Storyboard.TargetProperty="Y"
+            To="-500"
+            Duration="0:0:1"
+            AutoReverse="True" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+
+                            <!-- Your plane icon inside a Viewbox -->
+                            <Viewbox Width="20" Height="20"
+           VerticalAlignment="Center"
+           HorizontalAlignment="Center">
+                                <Canvas Width="24" Height="24">
+                                    <Canvas.RenderTransform>
+                                        <TranslateTransform x:Name="PlaneTransform" X="0" Y="0"/>
+                                    </Canvas.RenderTransform>
+                                    <Path Stroke="#14B8A6" StrokeThickness="2" StrokeLineJoin="Round"
+            Data="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/>
+                                    <Path Stroke="#14B8A6" StrokeThickness="2" StrokeLineJoin="Round"
+            Data="M21.854 2.147L10.914 13.086"/>
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+        
+    </Grid>
+</UserControl>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35303.130
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aurora.Server.Communication", "Aurora.Server.Communication\Aurora.Server.Communication.csproj", "{C6CCA773-02D9-423F-8D71-5C5DE42C3AD1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aurora.Server.Database", "Aurora.Server.Database\Aurora.Server.Database.csproj", "{B9C97748-39C1-47DA-A113-D925678631BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6CCA773-02D9-423F-8D71-5C5DE42C3AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6CCA773-02D9-423F-8D71-5C5DE42C3AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6CCA773-02D9-423F-8D71-5C5DE42C3AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6CCA773-02D9-423F-8D71-5C5DE42C3AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9C97748-39C1-47DA-A113-D925678631BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9C97748-39C1-47DA-A113-D925678631BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9C97748-39C1-47DA-A113-D925678631BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9C97748-39C1-47DA-A113-D925678631BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2554EAA9-D027-49BD-AC35-52010D185EDE}
+	EndGlobalSection
+EndGlobal

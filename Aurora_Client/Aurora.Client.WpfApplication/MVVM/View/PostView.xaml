@@ -1,0 +1,358 @@
+﻿<UserControl x:Class="Aurora.Client.WpfApplication.MVVM.View.PostView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Client.WpfApplication.MVVM.View" 
+             xmlns:userControl="clr-namespace:Aurora.Client.WpfApplication.UserControls" xmlns:viewmodel="clr-namespace:Aurora.Client.WpfApplication.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PostViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <!-- Easing Functions -->
+        <QuadraticEase x:Key="EaseOut" EasingMode="EaseOut"/>
+        <QuadraticEase x:Key="EaseIn" EasingMode="EaseIn"/>
+        <ElasticEase x:Key="ElasticEaseInOut" EasingMode="EaseInOut" Oscillations="3" Springiness="2"/>
+        <BounceEase x:Key="BounceEase" EasingMode="EaseOut" Bounces="3" Bounciness="2"/>
+
+        <!-- Button Style -->
+        <Style x:Key="AnimatedButtonStyle" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="Transparent"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                        <TranslateTransform X="0" Y="0"/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!-- Hover Animation: Scale effect -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                             To="1.2" Duration="0:0:0.2" EasingFunction="{StaticResource ElasticEaseInOut}" />
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                             To="1.2" Duration="0:0:0.2" EasingFunction="{StaticResource ElasticEaseInOut}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                             To="1" Duration="0:0:0.2" EasingFunction="{StaticResource ElasticEaseInOut}" />
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                             To="1" Duration="0:0:0.2" EasingFunction="{StaticResource ElasticEaseInOut}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+
+                <!-- Click Animation: Move Up & Change Color -->
+                <Trigger Property="IsPressed" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!-- Move up slightly -->
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[1].Y"
+                             To="-5" Duration="0:0:0.15" EasingFunction="{StaticResource BounceEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!-- Return to original position -->
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[1].Y"
+                             To="0" Duration="0:0:0.25" EasingFunction="{StaticResource BounceEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.25*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0"
+                CornerRadius="0 0 0 15">
+            <Border.Background>
+                <ImageBrush ImageSource="{Binding Post}" 
+                    Stretch="UniformToFill"/>
+            </Border.Background>
+        </Border>
+
+        <Border Grid.Column="1"
+                Background="White"
+                CornerRadius="0 0 15 0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="150"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="#E5E7EB"
+                        BorderThickness="0.7 0 0 0.7">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="45" 
+                                    Height="45"
+                                    CornerRadius="25"
+                                    Margin="15 0 0 0"
+                                    SnapsToDevicePixels="True"
+                                    RenderOptions.BitmapScalingMode="Fant"
+                                    HorizontalAlignment="Left"
+                                    BorderThickness="0.8"
+                                    BorderBrush="#ACB0AF">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding ProfilePicture}" 
+                                        Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
+
+                            <StackPanel Margin="10 10 0 0">
+                                <TextBlock Text="{Binding Username}"
+                                           FontSize="20"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding Email}"
+                                           Margin="0 5 0 0"
+                                           Foreground="#ACB0AF"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1"
+                        BorderBrush="#E5E7EB"
+                        BorderThickness="0.7 0 0 0.7">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                        <ItemsControl ItemsSource="{Binding Comments}"
+                                      Background="Transparent">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <userControl:CommentItem DataContext="{Binding}" Margin="5" Height="120"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
+                <StackPanel Grid.Row="2">
+                    <StackPanel Orientation="Horizontal">
+                        <!-- Like Button -->
+                        <Button Style="{StaticResource AnimatedButtonStyle}" 
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="40"
+                                Height="40"
+                                Margin="12 0 0 0"
+                                Command="{Binding LikeCommand}">
+                            <Canvas Width="24" Height="24">
+                                <Path Data="M19,14 C20.49,12.54 22,10.79 22,8.5 A5.5,5.5 0,0,0 16.5,3 C14.74,3 13.5,3.5 12,5 C10.5,3.5 9.26,3 7.5,3 A5.5,5.5 0,0,0 2,8.5 C2,10.8 3.5,12.55 5,14 L12,21 Z"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round">       
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Stroke" Value="#ACB0AF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlreadyLiked}" Value="True">
+                                                    <Setter Property="Stroke" Value="#FA718C"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </Canvas>
+                        </Button>
+
+                        <!-- Dislike Button -->
+                        <Button Style="{StaticResource AnimatedButtonStyle}" 
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="40"
+                                Height="40"
+                                Margin="12 0 0 0"
+                                Command="{Binding DislikeCommand}">      
+                            <Canvas Width="24" Height="24">
+                                <Path Data="M19,14 C20.49,12.54 22,10.79 22,8.5 A5.5,5.5 0,0,0 16.5,3 C14.74,3 13.5,3.5 12,5 C10.5,3.5 9.26,3 7.5,3 A5.5,5.5 0,0,0 2,8.5 C2,10.8 3.5,12.55 5,14 L12,21 Z"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Stroke" Value="#ACB0AF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlreadyDisliked}" Value="True">
+                                                    <Setter Property="Stroke" Value="#6271FA"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                                <Path Data="M12,13 L11,12 L13,10 L10,7 L12,5"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round">   
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Stroke" Value="#ACB0AF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlreadyDisliked}" Value="True">
+                                                    <Setter Property="Stroke" Value="#6271FA"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </Canvas>
+                        </Button>
+
+                        <!-- Superlike Button -->
+                        <Button Style="{StaticResource AnimatedButtonStyle}" 
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="40"
+                                Height="40"
+                                Margin="12 0 0 0"
+                                Command="{Binding SuperlikeCommand}">
+                            <Canvas Width="24" Height="24">
+                                <Path Data="M19,14 C20.49,12.54 22,10.79 22,8.5 A5.5,5.5 0,0,0 16.5,3 C14.74,3 13.5,3.5 12,5 C10.5,3.5 9.26,3 7.5,3 A5.5,5.5 0,0,0 2,8.5 C2,10.8 3.5,12.55 5,14 L12,21 Z"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Stroke" Value="#ACB0AF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlreadySuperLiked}" Value="True">
+                                                    <Setter Property="Stroke" Value="#64F773"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                                <Path Data="M12,5 L9.04,7.96 A2.17,2.17 0,0,0 9.04,11.04 C9.86,11.86 11.17,11.89 12,11.12 L14.07,9.22 A2.82,2.82 0,0,1 17.86,9.22 L20.82,11.88"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Stroke" Value="#ACB0AF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlreadySuperLiked}" Value="True">
+                                                    <Setter Property="Stroke" Value="#64F773"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                                <Path Data="M18,15 L16,13"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Stroke" Value="#ACB0AF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlreadySuperLiked}" Value="True">
+                                                    <Setter Property="Stroke" Value="#64F773"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                                <Path Data="M15,18 L13,16"
+                                      StrokeThickness="2"
+                                      StrokeLineJoin="Round">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Stroke" Value="#ACB0AF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlreadySuperliked}" Value="True">
+                                                    <Setter Property="Stroke" Value="#64F773"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </Canvas>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding AmountOfLikes, StringFormat={}{0} Likes}"
+                               FontSize="17"
+                               FontWeight="SemiBold"
+                               Margin="20 10 0 0"/>
+                        <TextBlock Text="{Binding AmountOfDislikes, StringFormat={}{0} Dislikes}"
+                               FontSize="17"
+                               FontWeight="SemiBold"
+                               Margin="20 10 0 0"/>
+                        <TextBlock Text="{Binding AmountOfSuperLikes, StringFormat={}{0} Super Likes}"
+                               FontSize="17"
+                               FontWeight="SemiBold"
+                               Margin="20 10 0 0"/>
+                    </StackPanel>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border BorderThickness="0.7" BorderBrush="#E5E7EB" Margin="20 20 20 20" CornerRadius="5" Grid.Row="1">
+                            <Grid>
+                                <TextBlock x:Name="textComment" MouseDown="textComment_MouseDown" Text="Type a message..." Style="{StaticResource txtHint}" VerticalAlignment="Center"/>
+                                <TextBox x:Name="txtComment" LostFocus="txtComment_LostFocus" BorderThickness="0" Height="30" Text="{Binding CommentData}"/>
+                            </Grid>
+                        </Border>
+
+                        <Button Grid.Column="1"
+                                Style="{StaticResource LowCornerRadiusButtonTheme}"
+                                Margin="0 20 10 20"
+                                Background="#14B8A6"
+                                BorderThickness="0"
+                                HorizontalAlignment="Right"
+                                Command="{Binding CommentCommand}">
+                            <Viewbox Width="40" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Canvas Width="24" Height="24">
+                                    <Path Stroke="#FAF8F0" StrokeThickness="2" StrokeLineJoin="Round" Data="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/>
+                                    <Path Stroke="#FAF8F0" StrokeThickness="2" StrokeLineJoin="Round" Data="M21.854 2.147L10.914 13.086"/>
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

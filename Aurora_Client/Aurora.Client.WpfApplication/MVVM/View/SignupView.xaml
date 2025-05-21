@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="Aurora.Client.WpfApplication.MVVM.View.SignupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Client.WpfApplication.MVVM.View"
+             xmlns:app="clr-namespace:Aurora.Client.WpfApplication"
+             xmlns:viewmodel="clr-namespace:Aurora.Client.WpfApplication.MVVM.ViewModel"
+             xmlns:userControls="clr-namespace:Aurora.Client.WpfApplication.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800"
+             xmlns:xf="clr-namespace:XamlFlair;assembly=XamlFlair.WPF" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:SignupViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border CornerRadius="0 15 15 0" xf:Animations.Primary="{StaticResource FadeInAndSlideFromLeft}" Grid.Column="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#3AA9AD" Offset="0"/>
+                    <GradientStop Color="#3AADA1" Offset="0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <Canvas>
+                    <Polygon Points="0,20 230,140 0,270" Fill="#4EB1B6"/>
+                    <Polygon Points="320,480 130,370 320,250" Fill="#4EB1B6"/>
+                </Canvas>
+
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Sign in to Aurora" Style="{StaticResource loginTitleText}"/>
+                    <TextBlock Text="Enter your account info and to connect us" Style="{StaticResource normalLoginText}" Opacity="0.8" Margin="20 30"/>
+                    <Button Content="Sign in" Style="{StaticResource signupButton}" Command="{Binding SwitchToSignin}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Border Background="White" Grid.Column="0" CornerRadius="15 0 0 15" xf:Animations.Primary="{StaticResource FadeInAndSlideFromLeft}">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Sign up to Aurora" Style="{StaticResource loginTitleText}" Foreground="#3AB19B"/>
+                <TextBlock Text="Please use your account info : " Style="{StaticResource normalLoginText}" Foreground="#878787" Margin="0 10 0 15"/>
+                <Border BorderThickness="1" BorderBrush="#ACB0AF" Margin="70 7" CornerRadius="5">
+                    <Grid Margin="7 9">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="/Images/user-icon.png" Height="20" Grid.Column="0"/>
+                        <TextBlock x:Name="textUsername" Text="Username" Style="{StaticResource txtHint}" Grid.Column="2" MouseDown="textUsername_MouseDown" VerticalAlignment="Center"/>
+                        <TextBox x:Name="txtUsername" Grid.Column="2" BorderThickness="0" Text="{Binding Username}" LostFocus="txtUsername_LostFocus" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="#ACB0AF" Margin="70 7" CornerRadius="5">
+                    <Grid Margin="7 9">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="/Images/email-icon.png" Height="20" Grid.Column="0"/>
+                        <TextBlock x:Name="textEmail" Text="Email" Style="{StaticResource txtHint}" Grid.Column="2" MouseDown="textEmail_MouseDown" VerticalAlignment="Center"/>
+                        <TextBox x:Name="txtEmail" Grid.Column="2" BorderThickness="0" Text="{Binding Email}" LostFocus="txtEmail_LostFocus" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="#ACB0AF" Margin="70 7" CornerRadius="5">
+                    <Grid Margin="7 9">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="/Images/lock-icon.png" Height="20" Grid.Column="0"/>
+                        <TextBlock x:Name="textPassword" MouseDown="textPassword_MouseDown" Text="Password" Style="{StaticResource txtHint}" Grid.Column="2" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                        <userControls:BindablePasswordBox Password="{Binding ConfirmPassword}" x:Name="txtPassword" Grid.Column="2" Margin="10 0 0 0" LostFocus="txtPassword_LostFocus" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="#ACB0AF" Margin="70 7" CornerRadius="5">
+                    <Grid Margin="7 9">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="/Images/lock-icon.png" Height="20" Grid.Column="0"/>
+                        <userControls:BindablePasswordBox x:Name="txtConfirmPassword" Password="{Binding Password}" Grid.Column="2" Margin="10 0 0 0" LostFocus="txtConfirmPassword_LostFocus" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="textConfirmPassword" MouseDown="textConfirmPassword_MouseDown" Text="Confirm Password" Style="{StaticResource txtHint}" Grid.Column="2" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+                <Button Content="Sign up" Style="{StaticResource loginButton}" Command="{Binding SubmitSignupCommand}"/>
+                <TextBlock Text="{Binding ErrorString}"
+                           Foreground="#F75F0C"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           TextAlignment="Center"
+                           Margin="0 20 0 0"
+                           Visibility="{Binding ErrorVisibility}"
+                           TextWrapping="Wrap"/>
+
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

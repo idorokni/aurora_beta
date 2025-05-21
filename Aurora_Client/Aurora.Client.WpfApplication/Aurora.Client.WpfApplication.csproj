@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Fonts\**" />
+    <EmbeddedResource Remove="Fonts\**" />
+    <None Remove="Fonts\**" />
+    <Page Remove="Fonts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Images\archive.png" />
+    <None Remove="Images\bell.png" />
+    <None Remove="Images\bookmark.png" />
+    <None Remove="Images\camera.png" />
+    <None Remove="Images\default_user_image.png" />
+    <None Remove="Images\dock.svg" />
+    <None Remove="Images\email-icon.png" />
+    <None Remove="Images\house.png" />
+    <None Remove="Images\key-icon.png" />
+    <None Remove="Images\lock-icon.png" />
+    <None Remove="Images\lock.png" />
+    <None Remove="Images\map-pin.png" />
+    <None Remove="Images\message-circle.png" />
+    <None Remove="Images\pen.png" />
+    <None Remove="Images\refresh.png" />
+    <None Remove="Images\search.png" />
+    <None Remove="Images\shield.png" />
+    <None Remove="Images\user-icon.png" />
+    <None Remove="Images\user.png" />
+    <None Remove="Images\white_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="XamlFlair.WPF" Version="1.2.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aurora.Client.Communication\Aurora.Client.Communication.csproj" />
+    <ProjectReference Include="..\SharedData\SharedData.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\archive.png" />
+    <Resource Include="Images\bell.png" />
+    <Resource Include="Images\bookmark.png" />
+    <Resource Include="Images\camera.png" />
+    <Resource Include="Images\default_user_image.png" />
+    <Resource Include="Images\dock.svg" />
+    <Resource Include="Images\email-icon.png" />
+    <Resource Include="Images\house.png" />
+    <Resource Include="Images\lock-icon.png" />
+    <Resource Include="Images\lock.png" />
+    <Resource Include="Images\map-pin.png" />
+    <Resource Include="Images\message-circle.png" />
+    <Resource Include="Images\pen.png" />
+    <Resource Include="Images\search.png" />
+    <Resource Include="Images\shield.png" />
+    <Resource Include="Images\user-icon.png" />
+    <Resource Include="Images\user.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+</Project>
