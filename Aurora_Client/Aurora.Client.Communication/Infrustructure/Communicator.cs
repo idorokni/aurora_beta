@@ -33,8 +33,11 @@ namespace Aurora.Client.Communication.Infrustructure
 
         private Communicator()
         {
-            CONNECTION_IP = Environment.GetEnvironmentVariable("SERVER_IP") ?? "localhost";
-            // Find and assign a free port for listening (Socket 2)
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string json = File.ReadAllText($"{appDataPath}/Aurora/appsettings.json");
+            var config = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(json);
+
+            CONNECTION_IP = config["Server"]["IP"];
             Console.WriteLine($"Using port {_clientListenPort} for client listen.");
         }
 

@@ -101,8 +101,6 @@ StyleCopReport.xml
 # Chutzpah Test files
 _Chutzpah*
 
-# Allow image files (explicitly whitelist common formats)
-
 # Visual C++ cache files
 ipch/
 *.aps
@@ -400,13 +398,3 @@ FodyWeavers.xsd
 *.sln.iml
 
 *.sqlite
-# --- IMAGE FILES: Allow image files (explicitly whitelist common formats) ---
-!*.png
-!*.jpg
-!*.jpeg
-!*.gif
-!*.bmp
-!*.tiff
-!*.ico
-!*.svg
-!/Aurora.Client.WpfApplication/Images/
