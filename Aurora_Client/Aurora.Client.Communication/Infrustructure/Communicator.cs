@@ -33,6 +33,7 @@ namespace Aurora.Client.Communication.Infrustructure
 
         private Communicator()
         {
+            CONNECTION_IP = Environment.GetEnvironmentVariable("SERVER_IP") ?? "localhost";
             // Find and assign a free port for listening (Socket 2)
             Console.WriteLine($"Using port {_clientListenPort} for client listen.");
         }

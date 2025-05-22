@@ -13,153 +13,122 @@ using System.Threading.Tasks;
 
 namespace Aurora.Server.Communication.Managers
 {
-    internal class DatabaseManager
-    {
-        private static DatabaseManager _instance;
-        public static DatabaseManager Instance
+        internal class DatabaseManager
         {
-            get
+            private static DatabaseManager _instance;
+            public static DatabaseManager Instance
             {
-                _instance ??= new DatabaseManager();
-                return _instance;
-            }
-        }
-
-        public async Task<bool> UserExists(string username)
-        {
-            try
-            {
-                using (var _db = new AuroraDB())
+                get
                 {
-                    return await _db.Users.AnyAsync(u => u.Username == username);
+                    _instance ??= new DatabaseManager();
+                    return _instance;
                 }
             }
-            catch (Exception ex)
+
+            public async Task<bool> UserExists(string username)
             {
-                return false;
-            }
-        }
-
-        public async Task<(ClientUserData, string, int)> AddUser(string username, string password, string email)
-        {
-            try
-            {
-                using (var _db = new AuroraDB())
-                {
-                    var user = new User
-                    {
-                        Username = username,
-                        Password = password,
-                        Email = email,
-                        ProfileImagePath = string.Empty,
-                        Bio = "This user has not set a bio yet.",
-                        Followers = 0,
-                        Following = 0,
-                        JoinDate = DateTime.Now.ToString("MM/dd/yyyy"),
-                        Birthday = "This user has not set a birthday yet."
-                    };
-                    _db.Users.Add(user);
-
-                    await _db.SaveChangesAsync();
-
-                    return (new ClientUserData
-                    {
-                        Username = user.Username,
-                        Bio = user.Bio,
-                        Email = user.Email,
-                        Followers = user.Followers,
-                        Following = user.Following,
-                        JoinDate = user.JoinDate,
-                        Birthday = user.Birthday,
-                        ProfilePicture = Encoding.UTF8.GetBytes(user.ProfileImagePath)
-                    }, user.ProfileImagePath, user.UserID);
-                }
-            }
-            catch (Exception ex)
-            {
-                return (null, string.Empty, 0);
-            }
-        }
-
-        public async Task RemoveUser(string username)
-        {
-            using (var _db = new AuroraDB())
-            {
-                _db.Users.Remove(await _db.Users.FirstOrDefaultAsync(u => u.Username == username));
-            }
-        }
-
-        public async Task<bool> checkIfPasswordsMatch(string username, string password)
-        {
-            using (var _db = new AuroraDB())
-            {
-                return (await _db.Users.FirstOrDefaultAsync(u => u.Username == username)).Password == password;
-            }
-        }
-
-        public async Task AddPost(int userID, string description, string postPath)
-        {
-            using (var _db = new AuroraDB())
-            {
-                _db.Posts.Add(new Post
-                {
-                    UserID = userID,
-                    Description = description,
-                    PostPath = postPath,
-                    AmountLikes = 0,
-                    AmountDislikes = 0,
-                    AmountSuperLikes = 0
-                });
-
                 try
                 {
-                    await _db.SaveChangesAsync();
-
+                    using (var _db = new AuroraDB())
+                    {
+                        return await _db.Users.AnyAsync(u => u.Username == username);
+                    }
                 }
                 catch (Exception ex)
                 {
-
+                    return false;
                 }
             }
-        }
 
-        public async Task<UserData> GetUser(int userID)
-        {
-            using (var _db = new AuroraDB())
+            public async Task<(ClientUserData, string, int)> AddUser(string username, string password, string email)
             {
-                var user = await _db.Users.FindAsync(userID);
-                return new UserData
+                try
                 {
-                    Username = user.Username,
-                    Bio = user.Bio,
-                    Followers = user.Followers,
-                    Following = user.Following,
-                    Email = user.Email,
-                    Birthday = user.Birthday,
-                    JoinDate = user.JoinDate,
-                    ProfilePicture = user.ProfileImagePath == string.Empty
-                        ? string.Empty
-                        : await ImageStorageService.GetImageAsync(user.ProfileImagePath)
-                };
-            }
-        }
+                    using (var _db = new AuroraDB())
+                    {
+                        var user = new User
+                        {
+                            Username = username,
+                            Password = password,
+                            Email = email,
+                            ProfileImagePath = string.Empty,
+                            Bio = "This user has not set a bio yet.",
+                            Followers = 0,
+                            Following = 0,
+                            JoinDate = DateTime.Now.ToString("MM/dd/yyyy"),
+                            Birthday = "This user has not set a birthday yet."
+                        };
+                        _db.Users.Add(user);
 
-        public async Task<(UserData, string, int)> GetUser(string username)
-        {
-            using (var _db = new AuroraDB())
-            {
-                var user = _db.Users.FirstOrDefault(u => u.Username == username);
-                if (user == null)
-                {
-                    throw new Exception("User not found.");
+                        await _db.SaveChangesAsync();
+
+                        return (new ClientUserData
+                        {
+                            Username = user.Username,
+                            Bio = user.Bio,
+                            Email = user.Email,
+                            Followers = user.Followers,
+                            Following = user.Following,
+                            JoinDate = user.JoinDate,
+                            Birthday = user.Birthday,
+                            ProfilePicture = Encoding.UTF8.GetBytes(user.ProfileImagePath)
+                        }, user.ProfileImagePath, user.UserID);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    return (null, string.Empty, 0);
+                }
+            }
 
-                var profileImage = string.IsNullOrEmpty(user.ProfileImagePath)
-                    ? string.Empty
-                    : await ImageStorageService.GetImageAsync(user.ProfileImagePath);
+            public async Task RemoveUser(string username)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    _db.Users.Remove(await _db.Users.FirstOrDefaultAsync(u => u.Username == username));
+                }
+            }
 
-                return (
-                    new UserData
+            public async Task<bool> checkIfPasswordsMatch(string username, string password)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    return (await _db.Users.FirstOrDefaultAsync(u => u.Username == username)).Password == password;
+                }
+            }
+
+            public async Task AddPost(int userID, string description, string postPath)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    _db.Posts.Add(new Post
+                    {
+                        UserID = userID,
+                        Description = description,
+                        PostPath = postPath,
+                        AmountLikes = 0,
+                        AmountDislikes = 0,
+                        AmountSuperLikes = 0
+                    });
+
+                    try
+                    {
+                        await _db.SaveChangesAsync();
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+
+            public async Task<UserData> GetUser(int userID)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    var user = await _db.Users.FindAsync(userID);
+                    return new UserData
                     {
                         Username = user.Username,
                         Bio = user.Bio,
@@ -168,134 +137,165 @@ namespace Aurora.Server.Communication.Managers
                         Email = user.Email,
                         Birthday = user.Birthday,
                         JoinDate = user.JoinDate,
-                        ProfilePicture = profileImage
-                    },
-                    user.ProfileImagePath,
-                    user.UserID
-                );
-            }
-        }
-
-        public async Task UpdateUser(string oldUsername, string email, string bio, string birthday, string imagePath)
-        {
-            try
-            {
-                using (var _db = new AuroraDB())
-                {
-                    var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == oldUsername);
-                    user.Email = email;
-                    user.Bio = bio;
-                    user.Birthday = birthday;
-                    user.ProfileImagePath = imagePath;
-
-                    await _db.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                return;
-            }
-        }
-
-        public List<SearchData> SearchUsers(string query)
-        {
-            using (var _db = new AuroraDB())
-            {
-                return _db.Users.Where(u => u.Username.Contains(query)).Select(u => new SearchData
-                {
-                    UserID = u.UserID,
-                    Username = u.Username,
-                    Followers = u.Followers,
-                    Following = u.Following
-                }).ToList();
-            }
-        }
-
-        public async Task<int> GetAmountOfPosts(int userID)
-        {
-            try
-            {
-                using (var _db = new AuroraDB())
-                {
-                    return _db.Posts.Count(p => p.User.UserID == userID);
-                }
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
-        }
-
-        public async Task<List<CommentData>> GetAllComments(int postID)
-        {
-            using (var _db = new AuroraDB())
-            {
-                return await _db.Comments
-                    .Where(c => c.PostID == postID)
-                    .Include(c => c.User)
-                    .Select(c => new CommentData
-                    {
-                        Username = c.User.Username,
-                        CommentContent = c.CommentContent,
-                        Email = c.User.Email,
-                        ProfilePicture = c.User.ProfileImagePath == string.Empty
+                        ProfilePicture = user.ProfileImagePath == string.Empty
                             ? string.Empty
-                            : ImageStorageService.GetImageAsync(c.User.ProfileImagePath).Result
-                    }) // Anonymous Type
-                    .ToListAsync(); // Convert in memory
+                            : await ImageStorageService.GetImageAsync(user.ProfileImagePath)
+                    };
+                }
             }
-        }
 
-        public async Task<(bool, bool, bool)> GetUserLikeData(int userID, int postID)
-        {
-            using (var _db = new AuroraDB())
+            public async Task<(UserData, string, int)> GetUser(string username)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    var user = _db.Users.FirstOrDefault(u => u.Username == username);
+                    if (user == null)
+                    {
+                        throw new Exception("User not found.");
+                    }
+
+                    var profileImage = string.IsNullOrEmpty(user.ProfileImagePath)
+                        ? string.Empty
+                        : await ImageStorageService.GetImageAsync(user.ProfileImagePath);
+
+                    return (
+                        new UserData
+                        {
+                            Username = user.Username,
+                            Bio = user.Bio,
+                            Followers = user.Followers,
+                            Following = user.Following,
+                            Email = user.Email,
+                            Birthday = user.Birthday,
+                            JoinDate = user.JoinDate,
+                            ProfilePicture = profileImage
+                        },
+                        user.ProfileImagePath,
+                        user.UserID
+                    );
+                }
+            }
+
+            public async Task UpdateUser(string oldUsername, string email, string bio, string birthday, string imagePath)
             {
                 try
                 {
-                    var reactions = await _db.Reactions
-                        .Where(r => r.UserID == userID && r.PostID == postID)
-                        .Select(r => r.Type)
-                        .ToListAsync();
+                    using (var _db = new AuroraDB())
+                    {
+                        var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == oldUsername);
+                        user.Email = email;
+                        user.Bio = bio;
+                        user.Birthday = birthday;
+                        user.ProfileImagePath = imagePath;
 
-                    return (reactions.Contains(ReactionType.Like), reactions.Contains(ReactionType.Dislike), reactions.Contains(ReactionType.SuperLike));
+                        await _db.SaveChangesAsync();
+                    }
                 }
                 catch (Exception ex)
                 {
-                    return (false, false, false);
+                    return;
                 }
             }
-        }
 
-        public async Task<Tuple<int, string>> GetPost(int userID, int postIndex)
-        {
-            using (var _db = new AuroraDB())
+            public List<SearchData> SearchUsers(string query)
             {
-                var posts = _db.Posts.Where(p => p.UserID == userID).ToList();
-                return new(posts[postIndex].PostId, await ImageStorageService.GetImageAsync(posts[postIndex].PostPath));
-            }
-        }
-
-        public async Task<PostData> GetPostData(int userID, int postID)
-        {
-            using (var _db = new AuroraDB())
-            {
-                var post = await _db.Posts.FindAsync(postID);
-                var likePostData = await GetUserLikeData(userID, postID);
-
-                return new PostData
+                using (var _db = new AuroraDB())
                 {
-                    AmountOfDislikes = post.AmountDislikes,
-                    AmountOfLikes = post.AmountLikes,
-                    AmountOfSuperLikes = post.AmountSuperLikes,
-                    Description = post.Description,
-                    Comments = await GetAllComments(post.PostId),
-                    AlreadyDisliked = likePostData.Item2,
-                    AlreadyLiked = likePostData.Item1,
-                    AlreadySuperLiked = likePostData.Item3
-                };
-
+                    return _db.Users.Where(u => u.Username.Contains(query)).Select(u => new SearchData
+                    {
+                        UserID = u.UserID,
+                        Username = u.Username,
+                        Followers = u.Followers,
+                        Following = u.Following
+                    }).ToList();
+                }
             }
-        }
+
+            public async Task<int> GetAmountOfPosts(int userID)
+            {
+                try
+                {
+                    using (var _db = new AuroraDB())
+                    {
+                        return _db.Posts.Count(p => p.User.UserID == userID);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+            }
+
+            public async Task<List<CommentData>> GetAllComments(int postID)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    return await _db.Comments
+                        .Where(c => c.PostID == postID)
+                        .Include(c => c.User)
+                        .Select(c => new CommentData
+                        {
+                            Username = c.User.Username,
+                            CommentContent = c.CommentContent,
+                            Email = c.User.Email,
+                            ProfilePicture = c.User.ProfileImagePath == string.Empty
+                                ? string.Empty
+                                : ImageStorageService.GetImageAsync(c.User.ProfileImagePath).Result
+                        }) // Anonymous Type
+                        .ToListAsync(); // Convert in memory
+                }
+            }
+
+            public async Task<(bool, bool, bool)> GetUserLikeData(int userID, int postID)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    try
+                    {
+                        var reactions = await _db.Reactions
+                            .Where(r => r.UserID == userID && r.PostID == postID)
+                            .Select(r => r.Type)
+                            .ToListAsync();
+
+                        return (reactions.Contains(ReactionType.Like), reactions.Contains(ReactionType.Dislike), reactions.Contains(ReactionType.SuperLike));
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, false, false);
+                    }
+                }
+            }
+
+            public async Task<Tuple<int, string>> GetPost(int userID, int postIndex)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    var posts = _db.Posts.Where(p => p.UserID == userID).ToList();
+                    return new(posts[postIndex].PostId, await ImageStorageService.GetImageAsync(posts[postIndex].PostPath));
+                }
+            }
+
+            public async Task<PostData> GetPostData(int userID, int postID)
+            {
+                using (var _db = new AuroraDB())
+                {
+                    var post = await _db.Posts.FindAsync(postID);
+                    var likePostData = await GetUserLikeData(userID, postID);
+
+                    return new PostData
+                    {
+                        AmountOfDislikes = post.AmountDislikes,
+                        AmountOfLikes = post.AmountLikes,
+                        AmountOfSuperLikes = post.AmountSuperLikes,
+                        Description = post.Description,
+                        Comments = await GetAllComments(post.PostId),
+                        AlreadyDisliked = likePostData.Item2,
+                        AlreadyLiked = likePostData.Item1,
+                        AlreadySuperLiked = likePostData.Item3
+                    };
+
+                }
+            }
 
         public async Task AddComment(int userID, int postID, string comment)
         {
