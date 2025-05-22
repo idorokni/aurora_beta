@@ -400,9 +400,8 @@ FodyWeavers.xsd
 *.sln.iml
 
 *.sqlite
-
+# --- IMAGE FILES: Allow image files (explicitly whitelist common formats) ---
 !*.png
-!/Aurora.Client.WpfApplication/Images/*.png
 !*.jpg
 !*.jpeg
 !*.gif
@@ -410,3 +409,4 @@ FodyWeavers.xsd
 !*.tiff
 !*.ico
 !*.svg
+!/Aurora.Client.WpfApplication/Images/
