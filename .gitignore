@@ -101,6 +101,16 @@ StyleCopReport.xml
 # Chutzpah Test files
 _Chutzpah*
 
+# Allow image files (explicitly whitelist common formats)
+!*.png
+!*.jpg
+!*.jpeg
+!*.gif
+!*.bmp
+!*.tiff
+!*.ico
+!*.svg
+
 # Visual C++ cache files
 ipch/
 *.aps
