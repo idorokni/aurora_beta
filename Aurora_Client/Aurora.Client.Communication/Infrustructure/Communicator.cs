@@ -50,7 +50,7 @@ namespace Aurora.Client.Communication.Infrustructure
             {
                 try
                 {
-                    var listener = new TcpListener(IPAddress.Loopback, port);
+                    var listener = new TcpListener(IPAddress.Any, port);
                     listener.Start(); // Keep it started
                     return listener;
                 }
