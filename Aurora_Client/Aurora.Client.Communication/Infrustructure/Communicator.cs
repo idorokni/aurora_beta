@@ -83,7 +83,6 @@ namespace Aurora.Client.Communication.Infrustructure
                     message = _clientListenPort.ToString()
                 };
                 await SendMessageToServer(Client, requestInfo);
-                var responseInfo = await ReadMessageFromServer(Client);
 
                 ServerConnect = _listener.AcceptTcpClient();
 
@@ -93,7 +92,7 @@ namespace Aurora.Client.Communication.Infrustructure
                     message = ""
                 };
                 await SendMessageToServer(Client, requestInfo);
-                responseInfo = await ReadMessageFromServer(Client);
+                var responseInfo = await ReadMessageFromServer(Client);
                 string pemPublicKey = responseInfo.message;
 
                 // import RSA public key
@@ -315,7 +314,7 @@ namespace Aurora.Client.Communication.Infrustructure
                 return new RequestInfo
                 {
                     code = (RequestCode)headerMessage[0],
-                    message = Encoding.UTF8.GetString(wholeMessage)
+                    message = await EncryptionManager.Instance.Decrypt(wholeMessage)
                 };
             }
             catch (Exception ex)

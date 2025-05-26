@@ -25,6 +25,7 @@ namespace Aurora.Server.Communication.Infrustructure
         private readonly ConcurrentDictionary<TcpClient, SemaphoreSlim> _clientLocks;
         private readonly Dictionary<TcpClient, TcpClient> _listeners;
         private readonly Dictionary<TcpClient, RequestInfo> _lastRequest;
+        private readonly Dictionary<TcpClient, (byte[], byte[])> _encryptionData;
         private readonly TcpListener _server;
 
         private const int SERVER_LISTEN_PORT = 1223;
@@ -43,6 +44,7 @@ namespace Aurora.Server.Communication.Infrustructure
             _server = new TcpListener(IPAddress.Any, SERVER_LISTEN_PORT);
             _listeners = new Dictionary<TcpClient, TcpClient>();
             _lastRequest = new Dictionary<TcpClient, RequestInfo>();
+            _encryptionData = new Dictionary<TcpClient, (byte[], byte[])>();
             _server.Start();
         }
 
@@ -227,11 +229,6 @@ namespace Aurora.Server.Communication.Infrustructure
                 tcpClient.Connect(num, port);
                 _listeners[client] = tcpClient;
 
-                await SendMessage(client, new ResponseInfo
-                {
-                    code = ResponseCode.PORT_SEND_SUCCESS,
-                    message = "Connected to the server"
-                });
                 info = await ReadMessage(client.GetStream());
                 var rsa = RSA.Create(2048);
                 if (info.code != RequestCode.GET_SERVER_RSA_PUBLIC_KEY_REQUEST_CODE)
@@ -251,6 +248,8 @@ namespace Aurora.Server.Communication.Infrustructure
                 var aesData = Newtonsoft.Json.JsonConvert.DeserializeObject<AesExchangeData>(info.data);
                 aesKey = rsa.Decrypt(aesData.key, RSAEncryptionPadding.Pkcs1);
                 aesIV = rsa.Decrypt(aesData.iv, RSAEncryptionPadding.Pkcs1);
+
+                _encryptionData[client] = (aesIV, aesKey); // Store per-client encryption data
                 result = new ResponseInfo
                 {
                     code = ResponseCode.SEND_AES_SETUP_SUCCESS,
@@ -268,7 +267,7 @@ namespace Aurora.Server.Communication.Infrustructure
                         (handler, result) = await handler.HandleRequest(info);
                         _clients[client] = handler;
                         await SendMessageEncrypted(client, result, aesIV, aesKey); // Send response using per-client lock
-                        await HandleClientUpdate(client, info, result, aesIV, aesKey);
+                        await HandleClientUpdate(client, info, result);
                     }
                     else
                     {
@@ -286,7 +285,7 @@ namespace Aurora.Server.Communication.Infrustructure
         }
 
         
-        private async Task HandleClientUpdate(TcpClient client, RequestInfo info, ResponseInfo result, byte[] iv, byte[] key)
+        private async Task HandleClientUpdate(TcpClient client, RequestInfo info, ResponseInfo result)
         {
             try
             {
@@ -294,7 +293,7 @@ namespace Aurora.Server.Communication.Infrustructure
                     .ToList()
                     .ForEach(async p =>
                     {
-                        await SendMessageEncrypted(_listeners[p.Key], p.Value, iv, key);
+                        await SendMessageEncrypted(_listeners[p.Key], p.Value, _encryptionData[client].Item1, _encryptionData[client].Item2);
                     });
             }
             catch (Exception ex)
