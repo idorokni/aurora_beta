@@ -11,6 +11,7 @@ using Aurora.Server.Communication.DataStruct;
 using Aurora.Server.Communication.Services;
 using Newtonsoft.Json;
 using Aurora.Server.Communication.Infrustructure;
+using System.Globalization;
 
 namespace Aurora.Server.Communication.RequestHandlers
 {
@@ -19,7 +20,7 @@ namespace Aurora.Server.Communication.RequestHandlers
         public int UserID => _userID;
         public bool IsRequestValid(RequestInfo info)
         {
-            return info.code >= RequestCode.LOGIN_REQUEST_CODE && info.code <= RequestCode.SEND_MESSAGE_REQUEST_CODE;
+            return info.code >= RequestCode.ADD_POST_REQUEST_CODE && info.code <= RequestCode.LOGOUT_REQUEST_CODE;
         }
 
         public async Task<(IRequestHandler, ResponseInfo)> HandleRequest(RequestInfo info)
@@ -32,7 +33,7 @@ namespace Aurora.Server.Communication.RequestHandlers
                     responseInfo = await HandleGetDataRequest(info);
                     break;
                 case RequestCode.ADD_POST_REQUEST_CODE:
-                        responseInfo = await HandlePostRequest(info);
+                    responseInfo = await HandlePostRequest(info);
                     break;
                 case RequestCode.UPDATE_USER_DATA_REQUEST_CODE:
                     responseInfo = await HandleUploadDataRequest(info);
@@ -73,11 +74,14 @@ namespace Aurora.Server.Communication.RequestHandlers
                 case RequestCode.SEND_MESSAGE_REQUEST_CODE:
                     responseInfo = await HandleSendMessageRequest(info);
                     break;
+                case RequestCode.LOGOUT_REQUEST_CODE:
+                    responseInfo = await HandleLogoutRequest(info);
+                    break;
                 default:
                     break;
             }
 
-            return (this, responseInfo);
+            return (info.code == RequestCode.LOGOUT_REQUEST_CODE ? RequestHandlerFactory.Instance.GetJWTRequestHandler() : this, responseInfo);
 
         }
 
@@ -103,7 +107,7 @@ namespace Aurora.Server.Communication.RequestHandlers
             {
                 code = ResponseCode.GET_ONLINE_USERS_SUCCESS,
                 message = Newtonsoft.Json.JsonConvert.SerializeObject(onlineUsers)
-            } : 
+            } :
             new ResponseInfo
             {
                 code = ResponseCode.GET_ONLINE_USERS_FAILED,
@@ -127,7 +131,7 @@ namespace Aurora.Server.Communication.RequestHandlers
                 code = ResponseCode.GET_RECENT_POSTS_FAILED,
                 message = ""
             };
-             
+
         }
 
         private async Task<ResponseInfo> HandleGetFollowingPostsRequest(RequestInfo info)
@@ -155,7 +159,7 @@ namespace Aurora.Server.Communication.RequestHandlers
             {
                 code = ResponseCode.FOLLOW_USER_SUCCESS,
                 message = ""
-            } : 
+            } :
             new ResponseInfo
             {
                 code = ResponseCode.FOLLOW_USER_FAILED,
@@ -289,6 +293,27 @@ namespace Aurora.Server.Communication.RequestHandlers
         private async Task<ResponseInfo> HandleUploadDataRequest(RequestInfo info)
         {
             var user = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientUserData>(info.data);
+
+            string input = user.Birthday;
+            DateTime birthday;
+
+            bool isValid = DateTime.TryParseExact(
+                input,
+                "dd/MM/yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out birthday
+            );
+
+            if(!isValid)
+            {
+                return new ResponseInfo
+                {
+                    code = ResponseCode.UPDATE_USER_DATE_FAILED,
+                    message = "Invalid date format. Please use dd/MM/yyyy."
+                };
+            }
+
             var path = await ImageStorageService.SaveProfileImage(user.Username, user.ProfilePicture);
 
             var databaseUser = await DatabaseManager.Instance.GetUser(_userID);
@@ -358,6 +383,15 @@ namespace Aurora.Server.Communication.RequestHandlers
                 message = ""
             };
 
+        }
+
+        private async Task<ResponseInfo> HandleLogoutRequest(RequestInfo info)
+        {
+            return new ResponseInfo
+            {
+                code = ResponseCode.LOGOUT_SUCCESS,
+                message = ""
+            };
         }
     }
 }

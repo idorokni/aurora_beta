@@ -117,7 +117,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="70"/>
                     <RowDefinition/>
-                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="170"/>
                 </Grid.RowDefinitions>
                 <Border BorderBrush="#E5E7EB"
                         BorderThickness="0.7 0 0 0.7">
@@ -172,6 +172,10 @@
                 </Border>
 
                 <StackPanel Grid.Row="2">
+                    <TextBlock Text="{Binding Description}"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Margin="20 10 0 0"/>
                     <StackPanel Orientation="Horizontal">
                         <!-- Like Button -->
                         <Button Style="{StaticResource AnimatedButtonStyle}" 

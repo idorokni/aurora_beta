@@ -52,6 +52,7 @@ namespace Aurora.Client.Communication.Codes
         SEND_AES_SETUP_FAILED = 237,
         GET_SERVER_RSA_PUBLIC_KEY_REQUEST_CODE_SUCCESS = 238,
         GET_SERVER_RSA_PUBLIC_KEY_FAILED = 239,
-
+        LOGOUT_SUCCESS = 240,
+        LOGOUT_FAILED = 241
     }
 }

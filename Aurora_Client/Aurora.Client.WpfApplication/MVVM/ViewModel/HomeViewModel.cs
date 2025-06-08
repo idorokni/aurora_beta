@@ -119,6 +119,8 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
                     var result = await SocialMediaManager.Instance.GetUserData(user.UserID);
                     var posts = await SocialMediaManager.Instance.GetAllPostsAsync(userID);
                     MainViewModel.Instance.CurrentView = new UserProfileViewModel(user.UserID, result, posts);
+                    MainViewModel.LastRelayCommand = GetUserCommand;
+                    MainViewModel.LastRelayCommandParameters = user;
                 }
             });
 

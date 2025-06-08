@@ -29,6 +29,7 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
         private bool _alreadyLiked = false;
         private bool _alreadyDisliked = false;
         private bool _alreadySuperLiked = false;
+        private string _description = string.Empty;
 
         public byte[] Post { get { return _post; } set { _post = value; OnPropertyChanged(); } }
 
@@ -49,6 +50,8 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
         public bool AlreadyDisliked { get { return _alreadyDisliked; } set { _alreadyDisliked = value; OnPropertyChanged(); } }
 
         public bool AlreadySuperLiked { get { return _alreadySuperLiked; } set { _alreadySuperLiked = value; OnPropertyChanged(); } }
+
+        public string Description { get { return _description; } set { _description = value; OnPropertyChanged(); } }
 
         public ObservableCollection<CommentModel> Comments { get; set; } = new ObservableCollection<CommentModel>();
 
@@ -76,6 +79,7 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
             AlreadyLiked = postData.AlreadyLiked;
             AlreadyDisliked = postData.AlreadyDisliked;
             AlreadySuperLiked = postData.AlreadySuperLiked;
+            Description = postData.Description;
 
             LoadComments(postData.Comments);
 

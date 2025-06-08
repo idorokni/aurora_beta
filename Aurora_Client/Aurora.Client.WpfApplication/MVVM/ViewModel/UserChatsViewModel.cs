@@ -78,6 +78,8 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
                 if (o is UserChatModel user)
                 {
                     LoadChat(user.UserID, user.Username, user.Image);
+                    MainViewModel.LastRelayCommand = SwapUserCommand;
+                    MainViewModel.LastRelayCommandParameters = user;
                 }
             });
         }

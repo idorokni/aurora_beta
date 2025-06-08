@@ -13,6 +13,7 @@ using Aurora.Client.Communication.Services;
 using Aurora.Client.Communication.Codes;
 using Aurora.Client.Communication.DataStruct;
 using Aurora.Client.Communication.Infrustructure;
+using Aurora.Client.Communication.Managers;
 
 namespace Aurora.Client.WpfApplication.MVVM.ViewModel
 {
@@ -48,26 +49,12 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
 
             SubmitImageCommand = new RelayCommand(async o =>
             {
-                var info = await UploadPostToServer(Description, ImagePath);
+                var info = await SocialMediaManager.Instance.UploadPostToServer(Description, ImagePath);
                 if (info.code == ResponseCode.ADD_POST_SUCCESS)
                 {
                     MainViewModel.Instance.CurrentView = HomeViewModel.Instance;
                 }
             });
-        }
-
-        private static async Task<ResponseInfo> UploadPostToServer(string postDescription, string imagePath)
-        {
-            RequestInfo requestInfo = new RequestInfo
-            {
-                message = Newtonsoft.Json.JsonConvert.SerializeObject(new { Description = postDescription, ImageData = await ImageService.ConvertImagePathToBit(imagePath) }),
-                code = RequestCode.ADD_POST_REQUEST_CODE
-            };
-
-            await Communicator.Instance.SendMessageToServer(Communicator.Instance.Client, requestInfo);
-            var responseInfo = await Communicator.Instance.ReadMessageFromServer(Communicator.Instance.Client);
-
-            return responseInfo;
         }
 
 

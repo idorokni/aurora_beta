@@ -54,6 +54,11 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
                 isRecentPosts = true;
 
                 var tuple = await SocialMediaManager.Instance.GetRecentPost(recentPostsIndex);
+                if(tuple == null)
+                {
+                    recentPostsIndex--;
+                    return;
+                }
                 MainPost = new DefultViewPostModel
                 {
                     PostID = tuple.Item2,
@@ -67,6 +72,22 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
                 isRecentPosts = false;
 
                 var tuple = await SocialMediaManager.Instance.GetFollowingPost(followingPostsIndex);
+                if (tuple == null && followingPostsIndex == 0)
+                {
+                    MainPost = new DefultViewPostModel
+                    {
+                        PostID = 0,
+                        Image = null,
+                        UserID = 0
+                    };
+
+                    return;
+                }
+                if (tuple == null)
+                {
+                    followingPostsIndex--;
+                    return;
+                }
                 MainPost = new DefultViewPostModel
                 {
                     PostID = tuple.Item2,
@@ -92,11 +113,13 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
 
                 if (isRecentPosts)
                 {
-                    GetRecentPostsCommand.Execute(--recentPostsIndex < 0 ? 0 : recentPostsIndex);
+                    recentPostsIndex = recentPostsIndex == 0 ? 0 : recentPostsIndex - 1;
+                    GetRecentPostsCommand.Execute(o);
                 }
                 else
                 {
-                    GetFollowingPostsCommand.Execute(--followingPostsIndex < 0 ? 0 : followingPostsIndex);
+                    followingPostsIndex = followingPostsIndex == 0 ? 0 : followingPostsIndex - 1;
+                    GetFollowingPostsCommand.Execute(o);
                 }
             });
         }

@@ -71,7 +71,7 @@ namespace Aurora.Client.Communication.Managers
 
             if (responseInfo.code == ResponseCode.TOKEN_SIGNUP_SUCCESS)
             {
-                var data = JsonConvert.DeserializeObject<TokenConnectData>(responseInfo.message);
+                var data = Newtonsoft.Json.JsonConvert.DeserializeObject<TokenConnectData>(responseInfo.message);
                 await TokenManager.Instance.SaveTokenToFileAsync(data.Token);
             }
 

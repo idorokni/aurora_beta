@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Server.Communication.Managers
@@ -47,6 +48,16 @@ namespace Aurora.Server.Communication.Managers
             await cryptoStream.WriteAsync(encryptedData, 0, encryptedData.Length).ConfigureAwait(false);
             cryptoStream.FlushFinalBlock();
             return ms.ToArray();
+        }
+
+        public static async Task<string> HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(password);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+                return Convert.ToBase64String(hashBytes);
+            }
         }
     }
 }

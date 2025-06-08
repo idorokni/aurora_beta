@@ -57,9 +57,10 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
                 {
                     var data = await SocialMediaManager.Instance.GetPostData(post.PostID);
                     MainViewModel.Instance.CurrentView = new PostViewModel(data, post, userData);
-                }
 
-                MainViewModel.LastRelayCommand = ViewPostCommand;
+                    MainViewModel.LastRelayCommand = ViewPostCommand!;
+                    MainViewModel.LastRelayCommandParameters = post;
+                }
             });
 
             FollowUserCommand = new RelayCommand(async o =>

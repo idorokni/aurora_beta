@@ -25,8 +25,10 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
         private string _birthday;
         private Visibility _defultImageVisibility;
         private Visibility _customImageVisibility;
+        private Visibility _errorVisibility;
         private string _imgaePath;
         private byte[] _startingImage;
+        private string _errorString;
 
         public string ChangeEmail { get { return _email; } set { _email = value; OnPropertyChanged(); } }
         public string ChangeBio { get { return _bio; } set { _bio = value; OnPropertyChanged(); } }
@@ -37,6 +39,8 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
         public Visibility CustomImageVisibility { get { return _customImageVisibility; } set { _customImageVisibility = value; OnPropertyChanged(); } }
         public string ImagePath { get { return _imgaePath; } set { _imgaePath = value; OnPropertyChanged(); } }
         public byte[] StartingImage { get { return _startingImage; } set { _startingImage = value; OnPropertyChanged(); } }
+        public string ErrorString { get { return _errorString; } set { _errorString = value; OnPropertyChanged(); } }
+        public Visibility ErrorVisibility { get { return _errorVisibility; } set { _errorVisibility = value; OnPropertyChanged(); } }
 
         public RelayCommand ChooseImageCommand { get; set; }
         public RelayCommand SubmitChangesCommand { get; set; }
@@ -66,13 +70,19 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
             {
                 try
                 {
-                    if (await SocialMediaManager.Instance.UpdateUser(ChangeBio, User.Username, ChangeBirthday, ChangeEmail, User.Followers, User.Following, User.JoinDate, ImagePath))
+                    var info = await SocialMediaManager.Instance.UpdateUser(ChangeBio, User.Username, ChangeBirthday, ChangeEmail, User.Followers, User.Following, User.JoinDate, ImagePath);
+                    if (info.code == ResponseCode.UPDATE_USER_DATE_SUCCESS)
                     {
                         User.Bio = ChangeBio;
                         User.Birthday = ChangeBirthday;
                         User.Email = ChangeEmail;
                         User.ProfilePicture = Convert.ToBase64String(await File.ReadAllBytesAsync(ImagePath));
                         MainViewModel.Instance.CurrentView = HomeViewModel.Instance;
+                    }
+                    else
+                    {
+                        ErrorString = info.message;
+                        ErrorVisibility = Visibility.Visible;
                     }
                 }
                 catch (Exception e)

@@ -293,7 +293,7 @@ namespace Aurora.Server.Communication.Infrustructure
                     .ToList()
                     .ForEach(async p =>
                     {
-                        await SendMessageEncrypted(_listeners[p.Key], p.Value, _encryptionData[client].Item1, _encryptionData[client].Item2);
+                        await SendMessageEncrypted(_listeners[p.Key], p.Value, _encryptionData[p.Key].Item1, _encryptionData[p.Key].Item2);
                     });
             }
             catch (Exception ex)

@@ -30,9 +30,11 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
         }
 
         public static RelayCommand LastRelayCommand { get; set; }
+        public static object LastRelayCommandParameters { get; set; } = null!;
 
         public RelayCommand EndProgramCommand { get; set; }
         public RelayCommand MinimizeProgramCommand { get; set; }
+        public RelayCommand LogoutCommand { get; set; }
         public RelayCommand RefreshCommand { get; set; }
         public RelayCommand HomeCommand { get; set; }
 
@@ -53,7 +55,8 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
             LastRelayCommand = null;
             RefreshCommand = new RelayCommand(async o =>
             {
-                LastRelayCommand?.Execute(null);
+                LastRelayCommand?.Execute(LastRelayCommandParameters);
+                LastRelayCommandParameters = null!;
             });
             HomeCommand = new RelayCommand(async o =>
             {
@@ -63,6 +66,12 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
                 }
                 await Task.Delay(500);
                 Instance.CurrentView = HomeViewModel.Instance;
+            }); 
+            LogoutCommand = new RelayCommand(async o =>
+            {
+                var result = await SocialMediaManager.Instance.Logout();
+                await Task.Delay(500);
+                Instance.CurrentView = new LoginViewModel();
             });
             InitializeViewModelAsync();
         }

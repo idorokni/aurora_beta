@@ -32,16 +32,12 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
             {
                 if (o is SearchModel data)
                 {
-                    try
-                    {
-                        var result = await SocialMediaManager.Instance.GetUserData(data.UserId);
-                        var posts = await SocialMediaManager.Instance.GetAllPostsAsync(data.UserId);
-                        MainViewModel.Instance.CurrentView = new UserProfileViewModel(data.UserId, result, posts);
-                    }
-                    catch (Exception e)
-                    {
-                        
-                    }
+                    var result = await SocialMediaManager.Instance.GetUserData(data.UserId);
+                    var posts = await SocialMediaManager.Instance.GetAllPostsAsync(data.UserId);
+                    MainViewModel.Instance.CurrentView = new UserProfileViewModel(data.UserId, result, posts);
+
+                    MainViewModel.LastRelayCommand = ViewUserCommand;
+                    MainViewModel.LastRelayCommandParameters = data;
                 }
             });
         }

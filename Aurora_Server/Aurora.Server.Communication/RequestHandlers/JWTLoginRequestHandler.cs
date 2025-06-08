@@ -105,7 +105,7 @@ namespace Aurora.Server.Communication.RequestHandlers
                     result.message = Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
                         Token = await JWTLoginManager.Instance.JWTSignupAsync(signupData.Username, signupData.Password, signupData.Email),
-                        Data = addResult.Item1
+                        Data = addResult.Item3
                     });
                     result.code = ResponseCode.TOKEN_SIGNUP_SUCCESS;
                     newRequestHandler = RequestHandlerFactory.Instance.GetHomeRequestHandler(addResult.Item3);

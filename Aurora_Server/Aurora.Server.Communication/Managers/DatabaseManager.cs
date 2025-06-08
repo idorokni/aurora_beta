@@ -46,10 +46,11 @@ namespace Aurora.Server.Communication.Managers
                 {
                     using (var _db = new AuroraDB())
                     {
+                        var hashedPassword = await EncryptionManager.HashPassword(password);
                         var user = new User
                         {
                             Username = username,
-                            Password = password,
+                            Password = hashedPassword,
                             Email = email,
                             ProfileImagePath = string.Empty,
                             Bio = "This user has not set a bio yet.",
@@ -93,7 +94,7 @@ namespace Aurora.Server.Communication.Managers
             {
                 using (var _db = new AuroraDB())
                 {
-                    return (await _db.Users.FirstOrDefaultAsync(u => u.Username == username)).Password == password;
+                    return (await _db.Users.FirstOrDefaultAsync(u => u.Username == username)).Password == await EncryptionManager.HashPassword(password);
                 }
             }
 
@@ -441,7 +442,10 @@ namespace Aurora.Server.Communication.Managers
                     .Take(1)
                     .FirstOrDefaultAsync();
 
-                // Process each post to asynchronously fetch the image
+                if(post == null)
+                {
+                    return null; // No posts found
+                }
 
                 var image = await ImageStorageService.GetImageAsync(post.PostPath);
                 return Tuple.Create(post.UserID, post.PostId, image);

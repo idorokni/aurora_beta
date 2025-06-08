@@ -212,6 +212,14 @@
                 </Border>
 
                 <Button Content="Save Changes" Command="{Binding SubmitChangesCommand}" Style="{StaticResource LowCornerRadiusButtonTheme}" Margin="7 15" Height="30" Width="200" BorderBrush="#6BBF59" Background="Transparent" BorderThickness="1.5" Foreground="#6BBF59" FontWeight="Bold"/>
+                <TextBlock Text="{Binding ErrorString}"
+                           Foreground="#F75F0C"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           TextAlignment="Center"
+                           Margin="0 20 0 0"
+                           Visibility="{Binding ErrorVisibility}"
+                           TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
     </Grid>

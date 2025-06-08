@@ -1,6 +1,7 @@
 ﻿using Aurora.Client.Communication.Codes;
 using Aurora.Client.Communication.DataStruct;
 using Aurora.Client.Communication.Infrustructure;
+using Aurora.Client.Communication.Services;
 using SharedData.Model;
 using System;
 using System.Collections.Generic;
@@ -155,7 +156,7 @@ namespace Aurora.Client.Communication.Managers
             return onlineUsers;
         }
 
-        public async Task<bool> UpdateUser(string bio, string username, string birthday, string email, int followers, int following, string joinDate, string imagePath)
+        public async Task<ResponseInfo> UpdateUser(string bio, string username, string birthday, string email, int followers, int following, string joinDate, string imagePath)
         {
             await Communicator.Instance.SendMessageToServerEncrypted(Communicator.Instance.Client, new RequestInfo
             {
@@ -169,12 +170,12 @@ namespace Aurora.Client.Communication.Managers
                     Followers = followers,
                     Following = following,
                     JoinDate = joinDate,
-                    ProfilePicture = await File.ReadAllBytesAsync(imagePath)
+                    ProfilePicture = imagePath != null ? await File.ReadAllBytesAsync(imagePath) : null
                 })
             });
 
             var responseInfo = await Communicator.Instance.ReadMessageFromServerEncrypted(Communicator.Instance.Client);
-            return responseInfo.code == ResponseCode.UPDATE_USER_DATE_SUCCESS;
+            return responseInfo;
         }
 
         public async Task<List<SearchModel>> SearchQueryAsync(string query)
@@ -274,6 +275,34 @@ namespace Aurora.Client.Communication.Managers
             });
             var responseInfo = await Communicator.Instance.ReadMessageFromServerEncrypted(Communicator.Instance.Client);
             return responseInfo.code == ResponseCode.UNFOLLOW_USER_SUCCESS;
+        }
+
+        public async Task<ResponseInfo> UploadPostToServer(string postDescription, string imagePath)
+        {
+            RequestInfo requestInfo = new RequestInfo
+            {
+                message = Newtonsoft.Json.JsonConvert.SerializeObject(new { Description = postDescription, ImageData = await ImageService.ConvertImagePathToBit(imagePath) }),
+                code = RequestCode.ADD_POST_REQUEST_CODE
+            };
+
+            await Communicator.Instance.SendMessageToServerEncrypted(Communicator.Instance.Client, requestInfo);
+            var responseInfo = await Communicator.Instance.ReadMessageFromServerEncrypted(Communicator.Instance.Client);
+
+            return responseInfo;
+        }
+
+        public async Task<ResponseInfo> Logout()
+        {
+            RequestInfo requestInfo = new RequestInfo
+            {
+                message = "",
+                code = RequestCode.LOGOUT_REQUEST_CODE
+            };
+
+            await Communicator.Instance.SendMessageToServerEncrypted(Communicator.Instance.Client, requestInfo);
+            var responseInfo = await Communicator.Instance.ReadMessageFromServerEncrypted(Communicator.Instance.Client);
+
+            return responseInfo;
         }
     }
 }
