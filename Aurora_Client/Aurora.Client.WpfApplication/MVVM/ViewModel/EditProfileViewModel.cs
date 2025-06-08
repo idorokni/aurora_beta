@@ -70,12 +70,12 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
             {
                 try
                 {
-                    var info = await SocialMediaManager.Instance.UpdateUser(ChangeBio, User.Username, ChangeBirthday, ChangeEmail, User.Followers, User.Following, User.JoinDate, ImagePath);
+                    var info = await SocialMediaManager.Instance.UpdateUser(ChangeBio ?? User.Bio, User.Username, ChangeBirthday ?? User.Birthday, ChangeEmail ?? User.Email, User.Followers, User.Following, User.JoinDate, ImagePath);
                     if (info.code == ResponseCode.UPDATE_USER_DATE_SUCCESS)
                     {
-                        User.Bio = ChangeBio;
-                        User.Birthday = ChangeBirthday;
-                        User.Email = ChangeEmail;
+                        User.Bio = ChangeBio ?? User.Bio;
+                        User.Birthday = ChangeBirthday ?? User.Birthday;
+                        User.Email = ChangeEmail ?? User.Email;
                         User.ProfilePicture = Convert.ToBase64String(await File.ReadAllBytesAsync(ImagePath));
                         MainViewModel.Instance.CurrentView = HomeViewModel.Instance;
                     }

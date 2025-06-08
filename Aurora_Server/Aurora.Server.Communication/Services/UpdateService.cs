@@ -21,6 +21,8 @@ namespace Aurora.Server.Communication.Services
                     return Newtonsoft.Json.JsonConvert.DeserializeObject<LoginData>(data);
                 case RequestCode.SIGN_UP_REQUEST_CODE:
                     return Newtonsoft.Json.JsonConvert.DeserializeObject<SignupData>(data);
+                case RequestCode.CONNECT_REQUEST_CODE:
+                    return data;
                 default:
                     return null;
             }
