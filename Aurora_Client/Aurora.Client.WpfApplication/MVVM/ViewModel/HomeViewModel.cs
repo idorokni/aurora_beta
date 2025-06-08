@@ -117,7 +117,7 @@ namespace Aurora.Client.WpfApplication.MVVM.ViewModel
                 if (o is UserChatModel user)
                 {
                     var result = await SocialMediaManager.Instance.GetUserData(user.UserID);
-                    var posts = await SocialMediaManager.Instance.GetAllPostsAsync(userID);
+                    var posts = await SocialMediaManager.Instance.GetAllPostsAsync(user.UserID);
                     MainViewModel.Instance.CurrentView = new UserProfileViewModel(user.UserID, result, posts);
                     MainViewModel.LastRelayCommand = GetUserCommand;
                     MainViewModel.LastRelayCommandParameters = user;
